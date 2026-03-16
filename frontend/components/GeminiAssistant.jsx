@@ -197,7 +197,7 @@ export default function GeminiAssistant() {
                 </div>
                 <div>
                   <p className="font-semibold text-sm text-zinc-800 dark:text-zinc-100">Browse Items</p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">See what's available to borrow near you</p>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">See what is available to borrow near you</p>
                 </div>
                 <ChevronRight size={16} className="ml-auto text-zinc-400 group-hover:text-indigo-500" />
               </button>
