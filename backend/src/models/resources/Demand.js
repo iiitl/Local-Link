@@ -47,6 +47,19 @@ const demandSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    // How many users need the same item in this period
+    count: {
+      type: Number,
+      default: 1,
+      min: 1,
+    },
+    // All users who joined this demand (first poster + others who matched)
+    interestedUsers: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   { timestamps: true }
 );

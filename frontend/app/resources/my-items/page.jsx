@@ -377,7 +377,14 @@ export default function MyItemsPage() {
                   <p className="font-semibold">{d.title}</p>
                   <p className="text-xs text-muted-foreground capitalize">{d.category} · Budget ≤ ₹{d.maxBudgetPerDay}/day</p>
                 </div>
-                <span className="text-xs text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded-full">open</span>
+                <div className="flex items-center gap-1.5">
+                  {d.count > 1 && (
+                    <span className="text-xs font-bold text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-full">
+                      🔥 {d.count} people
+                    </span>
+                  )}
+                  <span className="text-xs text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded-full">open</span>
+                </div>
               </div>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Calendar className="w-3 h-3" />

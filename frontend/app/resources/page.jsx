@@ -312,9 +312,16 @@ export default function ResourcesPage() {
                     </div>
                   </>
                 ) : (
-                  <div className="flex items-start gap-2 text-blue-600 bg-blue-500/10 px-3 py-2 rounded-lg">
+                  <div className={`flex items-start gap-2 px-3 py-2 rounded-lg ${demandResult.merged ? 'text-amber-700 bg-amber-500/10' : 'text-blue-600 bg-blue-500/10'}`}>
                     <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm">{demandResult.message}</p>
+                    <div>
+                      <p className="text-sm">{demandResult.message}</p>
+                      {demandResult.merged && demandResult.data?.count > 1 && (
+                        <p className="text-xs mt-1 font-semibold">
+                          🔥 {demandResult.data.count} people want this — owners will notice!
+                        </p>
+                      )}
+                    </div>
                   </div>
                 )}
                 <button onClick={() => setShowDemand(false)} className="w-full py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-colors">Done</button>

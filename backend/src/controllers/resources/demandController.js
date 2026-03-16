@@ -5,7 +5,7 @@ const VALID_CATEGORIES = ['drill', 'ladder', 'projector', 'tent', 'tool', 'appli
 
 // ─────────────────────────────────────────────
 // POST /api/v1/demands
-// Create a demand + instant match check
+// Create a demand + instant match check + counter increment for duplicates
 // ─────────────────────────────────────────────
 exports.createDemand = async (req, res) => {
   try {
@@ -22,7 +22,7 @@ exports.createDemand = async (req, res) => {
       return res.status(400).json({ success: false, error: `Invalid category. Must be one of: ${VALID_CATEGORIES.join(', ')}` });
     }
     const from = new Date(fromDate);
-    const to = new Date(toDate);
+    const to   = new Date(toDate);
     const today = new Date(); today.setHours(0, 0, 0, 0);
     if (isNaN(from.getTime()) || isNaN(to.getTime())) {
       return res.status(400).json({ success: false, error: 'Invalid dates' });
@@ -33,49 +33,34 @@ exports.createDemand = async (req, res) => {
     if (to <= from) {
       return res.status(400).json({ success: false, error: 'End date must be after start date' });
     }
-    if (Number(maxBudgetPerDay) < 1) {
+    const budget = Number(maxBudgetPerDay);
+    if (budget < 1) {
       return res.status(400).json({ success: false, error: 'Budget must be at least ₹1/day' });
     }
 
-    // ── Duplicate check: same user, same category, overlapping dates ──
-    const overlap = await Demand.findOne({
-      postedBy: userId,
-      category,
-      status: 'open',
-      fromDate: { $lte: to },
-      toDate: { $gte: from },
-    });
-    if (overlap) {
-      return res.status(400).json({
-        success: false,
-        error: 'You already have an open demand for this category in that date range',
-      });
-    }
-
-    // ── Instant match: find available resources in category + date range + budget ──
+    // ── Instant match: find available resources ──────────────────────────
     const Booking = require('../../models/resources/Booking');
     const candidates = await Resource.find({
       category,
       isActive: true,
-      pricePerDay: { $lte: Number(maxBudgetPerDay) },
+      pricePerDay: { $lte: budget },
       availableFrom: { $lte: from },
-      availableTo: { $gte: to },
+      availableTo:   { $gte: to },
     }).populate('owner', 'fullName rating');
 
-    // Filter out resources with conflicting active bookings
     const matches = [];
     for (const r of candidates) {
       const conflict = await Booking.countDocuments({
         resource: r._id,
-        status: { $in: ['confirmed', 'active'] },
+        status:   { $in: ['confirmed', 'active'] },
         fromDate: { $lt: to },
-        toDate: { $gt: from },
+        toDate:   { $gt: from },
       });
       if (conflict === 0) matches.push(r);
     }
 
     if (matches.length > 0) {
-      // Matches found — return suggestions WITHOUT saving the demand
+      // Matches found — do NOT save demand, just return suggestions
       return res.status(200).json({
         success: true,
         matched: true,
@@ -92,14 +77,42 @@ exports.createDemand = async (req, res) => {
       });
     }
 
-    // ── No match — save demand publicly ──────────────────────────────
+    // ── No match — check for an existing identical public demand ──────────
+    // "Same demand" = same category, overlapping date range, status open,
+    // and user hasn't already joined it
+    const existing = await Demand.findOne({
+      category,
+      status: 'open',
+      fromDate: { $lte: to },
+      toDate:   { $gte: from },
+      interestedUsers: { $ne: userId }, // user not already counted
+    });
+
+    if (existing) {
+      // Increment counter and add this user
+      existing.count += 1;
+      existing.interestedUsers.push(userId);
+      await existing.save();
+      await existing.populate('postedBy', 'fullName');
+
+      return res.status(200).json({
+        success: true,
+        matched: false,
+        merged: true,
+        data: existing,
+        message: `${existing.count} people are now looking for the same item — your demand has been counted!`,
+      });
+    }
+
+    // ── Completely new demand — create it ────────────────────────────────
     const demand = await Demand.create({
       title,
       category,
       fromDate: from,
-      toDate: to,
-      maxBudgetPerDay: Number(maxBudgetPerDay),
+      toDate:   to,
+      maxBudgetPerDay: budget,
       postedBy: userId,
+      interestedUsers: [userId],
     });
 
     await demand.populate('postedBy', 'fullName');
@@ -107,6 +120,7 @@ exports.createDemand = async (req, res) => {
     res.status(201).json({
       success: true,
       matched: false,
+      merged: false,
       data: demand,
       message: 'No items found right now. Your demand has been posted publicly — other members will be notified.',
     });
