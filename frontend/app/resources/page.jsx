@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { MapPin, Wrench, Search, Filter, Star, TrendingUp } from 'lucide-react';
+import { MapPin, Wrench, Search, Filter, Star, TrendingUp, BellPlus, X, CheckCircle } from 'lucide-react';
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api/v1';
 
@@ -39,6 +39,12 @@ export default function ResourcesPage() {
   const [search, setSearch] = useState('');
   const [userCoords, setUserCoords] = useState(null);
   const [isLocating, setIsLocating] = useState(false);
+
+  // Demand state
+  const [showDemand, setShowDemand] = useState(false);
+  const [demandForm, setDemandForm] = useState({ title: '', category: 'drill', fromDate: '', toDate: '', maxBudgetPerDay: '' });
+  const [demandLoading, setDemandLoading] = useState(false);
+  const [demandResult, setDemandResult] = useState(null); // { matched, matches?, message }
 
   const fetchResources = async (coords) => {
     setIsLoading(true);
@@ -104,6 +110,30 @@ export default function ResourcesPage() {
     r.title.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleDemandSubmit = async (e) => {
+    e.preventDefault();
+    setDemandLoading(true);
+    setDemandResult(null);
+    try {
+      const res = await fetch(`${API_BASE}/demands`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...demandForm,
+          maxBudgetPerDay: Number(demandForm.maxBudgetPerDay),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to post demand');
+      setDemandResult(data);
+    } catch (err) {
+      setDemandResult({ error: err.message });
+    } finally {
+      setDemandLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-transparent text-foreground transition-colors duration-300 relative">
       <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-amber-400/20 dark:bg-amber-600/20 blur-[120px] pointer-events-none -z-10 animate-pulse" />
@@ -132,6 +162,12 @@ export default function ResourcesPage() {
         >
           + List my item
         </Link>
+        <button
+          onClick={() => { setShowDemand(true); setDemandResult(null); setDemandForm({ title: '', category: 'drill', fromDate: '', toDate: '', maxBudgetPerDay: '' }); }}
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition-colors"
+        >
+          <BellPlus className="w-4 h-4" /> Post Demand
+        </button>
       </header>
 
       {/* Filters */}
@@ -236,6 +272,98 @@ export default function ResourcesPage() {
           View my listings & bookings →
         </Link>
       </div>
+
+      {/* ── POST DEMAND MODAL ───────────────────────────────────────────── */}
+      {showDemand && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-background rounded-2xl border shadow-xl w-full max-w-md p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold flex items-center gap-2"><BellPlus className="w-5 h-5 text-indigo-500" /> Post a Demand</h2>
+              <button onClick={() => setShowDemand(false)} className="p-1.5 rounded-lg hover:bg-muted transition-colors"><X className="w-4 h-4" /></button>
+            </div>
+
+            {/* Result view */}
+            {demandResult ? (
+              <div className="space-y-3">
+                {demandResult.error ? (
+                  <p className="text-sm text-red-500 bg-red-500/10 px-3 py-2 rounded-lg">{demandResult.error}</p>
+                ) : demandResult.matched ? (
+                  <>
+                    <div className="flex items-center gap-2 text-emerald-600 bg-emerald-500/10 px-3 py-2 rounded-lg">
+                      <CheckCircle className="w-4 h-4" />
+                      <p className="text-sm font-medium">{demandResult.message}</p>
+                    </div>
+                    <p className="text-sm font-semibold">Available items for you:</p>
+                    <div className="space-y-2 max-h-56 overflow-y-auto">
+                      {demandResult.matches.map((item) => (
+                        <Link
+                          key={item._id}
+                          href={`/resources/item/${item._id}`}
+                          onClick={() => setShowDemand(false)}
+                          className="flex items-center justify-between p-3 rounded-xl border hover:border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950 transition-all"
+                        >
+                          <div>
+                            <p className="text-sm font-medium">{item.title}</p>
+                            <p className="text-xs text-muted-foreground capitalize">{item.category} · {item.condition} · by {item.owner?.fullName}</p>
+                          </div>
+                          <p className="text-sm font-bold text-amber-500 ml-3">₹{item.pricePerDay}/day</p>
+                        </Link>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex items-start gap-2 text-blue-600 bg-blue-500/10 px-3 py-2 rounded-lg">
+                    <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                    <p className="text-sm">{demandResult.message}</p>
+                  </div>
+                )}
+                <button onClick={() => setShowDemand(false)} className="w-full py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-colors">Done</button>
+              </div>
+            ) : (
+              /* Form view */
+              <form onSubmit={handleDemandSubmit} className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">What do you need?</label>
+                  <input type="text" required placeholder="e.g. Need a drill for 3 days" value={demandForm.title}
+                    onChange={e => setDemandForm(p => ({ ...p, title: e.target.value }))}
+                    className="w-full p-2.5 rounded-xl border bg-background text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Category</label>
+                  <select required value={demandForm.category} onChange={e => setDemandForm(p => ({ ...p, category: e.target.value }))}
+                    className="w-full p-2.5 rounded-xl border bg-background text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none">
+                    {Object.entries(CATEGORY_LABELS).map(([val, label]) => <option key={val} value={val}>{label}</option>)}
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium">From date</label>
+                    <input type="date" required value={demandForm.fromDate} onChange={e => setDemandForm(p => ({ ...p, fromDate: e.target.value }))}
+                      className="w-full p-2.5 rounded-xl border bg-background text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium">To date</label>
+                    <input type="date" required value={demandForm.toDate} onChange={e => setDemandForm(p => ({ ...p, toDate: e.target.value }))}
+                      className="w-full p-2.5 rounded-xl border bg-background text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none" />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Max budget per day (₹)</label>
+                  <input type="number" required min="1" placeholder="e.g. 100" value={demandForm.maxBudgetPerDay}
+                    onChange={e => setDemandForm(p => ({ ...p, maxBudgetPerDay: e.target.value }))}
+                    className="w-full p-2.5 rounded-xl border bg-background text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none" />
+                </div>
+                <div className="flex gap-3">
+                  <button type="button" onClick={() => setShowDemand(false)} className="flex-1 py-2.5 rounded-xl border text-sm font-medium hover:bg-muted transition-colors">Cancel</button>
+                  <button type="submit" disabled={demandLoading} className="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 disabled:opacity-60 transition-colors">
+                    {demandLoading ? 'Checking...' : 'Post Demand'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );

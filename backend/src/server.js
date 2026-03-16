@@ -61,6 +61,7 @@ app.use('/api/food', foodRoutes);
 app.use('/api/v1/skills', skillsRoutes);
 app.use('/api/v1/resources', require('./routes/resources/resourceRoutes'));
 app.use('/api/v1/bookings', require('./routes/resources/bookingRoutes'));
+app.use('/api/v1/demands', require('./routes/resources/demandRoutes'));
 
 app.get('/', (req, res) => {
   res.send('Local Links Backend is alive and ready!');
