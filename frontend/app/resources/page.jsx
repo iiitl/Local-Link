@@ -23,9 +23,16 @@ const CONDITION_COLORS = {
   fair: 'text-orange-500 bg-orange-500/10',
 };
 
+const MOCK_RESOURCES = [
+  { _id: 'm1', title: 'Bosch Drill Machine', category: 'drill', condition: 'good', pricePerDay: 80, depositAmount: 600, owner: { fullName: 'Rajan Mehta', rating: 4.7 }, ml_score: null },
+  { _id: 'm2', title: '8ft Aluminum Ladder', category: 'ladder', condition: 'good', pricePerDay: 50, depositAmount: 300, owner: { fullName: 'Sunita Rao', rating: 4.5 }, ml_score: null },
+  { _id: 'm3', title: 'Epson Projector 3000 Lumens', category: 'projector', condition: 'new', pricePerDay: 200, depositAmount: 2000, owner: { fullName: 'Amit Shah', rating: 4.9 }, ml_score: null },
+  { _id: 'm4', title: 'Large Camping Tent (6-person)', category: 'tent', condition: 'good', pricePerDay: 150, depositAmount: 800, owner: { fullName: 'Priya Kapoor', rating: 4.6 }, ml_score: null },
+];
+
 export default function ResourcesPage() {
-  const [resources, setResources] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [resources, setResources] = useState(MOCK_RESOURCES);
+  const [isLoading, setIsLoading] = useState(false);
   const [mlRanked, setMlRanked] = useState(false);
   const [error, setError] = useState('');
   const [category, setCategory] = useState('');
@@ -51,7 +58,7 @@ export default function ResourcesPage() {
       setMlRanked(data.ml_ranked || false);
     } catch (err) {
       setError(err.message);
-      setResources([]);
+      setResources(MOCK_RESOURCES);
     } finally {
       setIsLoading(false);
     }
