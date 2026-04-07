@@ -1,6 +1,7 @@
 const Service = require('../../models/skills/Service');
 const SkillBooking = require('../../models/skills/Booking');
 const Review = require('../../models/skills/Review');
+const mongoose = require('mongoose');
 
 // @desc    Get all services with filters
 // @route   GET /api/v1/skills/services
@@ -192,6 +193,13 @@ exports.getServiceById = async (req, res) => {
 // @access  Public
 exports.getServiceReviews = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid service id',
+      });
+    }
+
     const { page = 1, limit = 10, sortBy = 'recent' } = req.query;
 
     let sortOptions;
@@ -221,7 +229,7 @@ exports.getServiceReviews = async (req, res) => {
 
     // Calculate rating breakdown
     const ratingBreakdown = await Review.aggregate([
-      { $match: { service: require('mongoose').Types.ObjectId(req.params.id) } },
+      { $match: { service: new mongoose.Types.ObjectId(req.params.id) } },
       { $group: { _id: '$rating', count: { $sum: 1 } } },
       { $sort: { _id: -1 } },
     ]);

@@ -50,6 +50,14 @@ Local-Link/
     |-- use_cases.md
     |-- security.md
     `-- contribute.md
+|-- .github/
+|   |-- PULL_REQUEST_TEMPLATE.md
+|   `-- ISSUE_TEMPLATE/
+|       |-- bug_report.yml
+|       |-- feature_request.yml
+|       |-- question.yml
+|       `-- config.yml
+`-- contribution.md
 ```
 
 ## Quick start (local development)
@@ -79,7 +87,6 @@ Recommended frontend env values in `frontend/.env.local`:
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
-BACKEND_URL=http://localhost:5000/api
 ```
 
 ### 3) ML service
@@ -112,6 +119,7 @@ Detailed project docs are in `Documentation/`:
 - `Documentation/use_cases.md`
 - `Documentation/security.md`
 - `Documentation/contribute.md`
+- `contribution.md`
 
 ## Contributing
 
@@ -121,7 +129,7 @@ Use feature branches and clear commit messages:
 - `fix(<module>): short description`
 - `docs: update <topic>`
 
-See `Documentation/contribute.md` for full contribution workflow.
+See `contribution.md` for the full setup, branch, commit, PR, and issue workflow.
 
 ## License
 

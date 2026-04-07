@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Shield, AlertTriangle, CheckCircle, Wrench } from 'lucide-react';
 
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api/v1';
+const API_BASE = `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1`;
 
 export default function BookResourcePage() {
   const { id } = useParams();

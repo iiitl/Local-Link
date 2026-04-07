@@ -1,0 +1,51 @@
+name: Feature request
+description: Suggest an improvement or new feature.
+title: "feat(<scope>): <short feature summary>"
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature.
+        Explain the problem first, then the proposed solution.
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Affected scope
+      options:
+        - frontend
+        - backend
+        - ml-service
+        - docs
+        - multi-service
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What user/developer problem are you trying to solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe expected behavior and implementation idea.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Mention affected routes/pages/models, migration risk, or breaking changes.

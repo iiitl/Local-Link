@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000/api/v1";
+const API_BASE = `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1`;
 
 const MOCK_ITEMS = [
   { _id: "m1", title: "Bosch Drill Machine", category: "drill", condition: "good", pricePerDay: 80, depositAmount: 600, owner: { fullName: "Rajan Mehta" } },

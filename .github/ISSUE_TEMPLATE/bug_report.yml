@@ -1,0 +1,80 @@
+name: Bug report
+description: Report a reproducible problem in Local-Link.
+title: "fix(<scope>): <short bug summary>"
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug report.
+        Please provide enough detail so maintainers can reproduce quickly.
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Affected scope
+      options:
+        - frontend
+        - backend
+        - ml-service
+        - docs
+        - unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Bug summary
+      description: One clear sentence describing the bug.
+      placeholder: Example - Booking fails with 500 when service id is invalid.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact steps to reproduce the issue.
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. Send request ...
+        4. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots / API response
+      description: Paste relevant logs or screenshots.
+      render: shell
+
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Provide OS, Node, pnpm, Python (if relevant), browser.
+      placeholder: |
+        OS: Windows 11
+        Node: 22.x
+        pnpm: 10.x
+        Browser: Chrome 135
+    validations:
+      required: true

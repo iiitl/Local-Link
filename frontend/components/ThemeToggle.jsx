@@ -13,7 +13,7 @@ export function ThemeToggle() {
   const [userName, setUserName] = useState("");
   const pathname = usePathname();
   const router = useRouter();
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
     setMounted(true);
@@ -53,17 +53,30 @@ export function ThemeToggle() {
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true);
-      await fetch(`${API_BASE_URL}/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      await Promise.allSettled([
+        fetch(`${API_BASE_URL}/auth/logout`, {
+          method: "POST",
+          credentials: "include",
+        }),
+        fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+        }),
+      ]);
     } catch (_error) {
       // Ignore logout API failures and still navigate to landing.
     } finally {
       setIsLoggingOut(false);
       setUserName("");
-      router.replace("/landing");
-      router.refresh();
+      if (typeof document !== 'undefined') {
+        document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax';
+      }
+      try {
+        localStorage.removeItem('user');
+      } catch (_error) {
+        // Ignore storage errors.
+      }
+      window.location.href = '/landing';
     }
   };
 

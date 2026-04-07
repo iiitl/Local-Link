@@ -1,0 +1,30 @@
+name: Question / support
+description: Ask a usage, setup, or architecture question.
+title: "question: <short summary>"
+labels:
+  - question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ask one clear question per issue where possible.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      placeholder: What are you trying to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you already tried
+      description: Mention docs/commands/files you checked.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Add relevant environment details and logs.

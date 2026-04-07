@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Contribution Guide
+    url: https://github.com/iiitl/Local-Link/blob/main/contribution.md
+    about: Read setup, branching, commit, and PR workflow before opening an issue.
+  - name: Security Reporting
+    url: https://github.com/iiitl/Local-Link/security
+    about: Do not post vulnerabilities publicly. Report security issues privately.

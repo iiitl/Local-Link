@@ -11,7 +11,7 @@ import {
   Store,
 } from 'lucide-react';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const initialSignupState = {
   fullName: '',
@@ -31,6 +31,7 @@ export function AuthPanel() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryMode = searchParams.get('mode');
+  const nextUrl = searchParams.get('next') || '/home';
   const initialMode = queryMode === 'signup' ? 'signup' : 'login';
 
   const [mode, setMode] = useState(initialMode);
@@ -54,15 +55,18 @@ export function AuthPanel() {
 
   useEffect(() => {
     const checkSession = async () => {
+      if (typeof document !== 'undefined' && document.cookie.split('; ').some((c) => c.startsWith('token='))) {
+        router.replace('/home');
+        return;
+      }
+
       try {
         const response = await fetch(`${API_BASE_URL}/auth/me`, {
           method: 'GET',
           credentials: 'include',
         });
         if (response.ok) {
-          const nextPath = searchParams.get('next') || '/';
-          router.replace(nextPath);
-          router.refresh();
+          router.replace('/home');
         }
       } catch (_error) {
         // No active session; user stays on login page.
@@ -70,7 +74,7 @@ export function AuthPanel() {
     };
 
     checkSession();
-  }, [router, searchParams]);
+  }, [router]);
 
   const clearStatus = () => setErrorMessage('');
 
@@ -158,15 +162,17 @@ export function AuthPanel() {
         localStorage.setItem('user', JSON.stringify(data.user));
       }
 
+      if (data.token && typeof document !== 'undefined') {
+        document.cookie = `token=${data.token}; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax`;
+      }
+
       if (mode === 'login') {
         setLoginData(initialLoginState);
       } else {
         setSignupData(initialSignupState);
       }
 
-      const nextPath = searchParams.get('next') || '/';
-      router.replace(nextPath);
-      router.refresh();
+      window.location.href = nextUrl;
     } catch (_error) {
       setErrorMessage(`Cannot connect to local API: ${endpoint}`);
     } finally {

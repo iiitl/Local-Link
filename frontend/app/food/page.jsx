@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { MapPin, Clock, Leaf, PlusCircle, ArrowLeft, ShieldAlert, User } from 'lucide-react';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; 

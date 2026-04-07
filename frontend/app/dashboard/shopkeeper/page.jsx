@@ -12,10 +12,10 @@ export default function ShopkeeperDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api';
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
         const [invRes, ordRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/v1/commerce/shopkeeper/inventory`, { credentials: 'include' }),
-          fetch(`${API_BASE_URL}/v1/commerce/shopkeeper/orders`, { credentials: 'include' })
+          fetch(`${API_BASE_URL}/v1/shopkeeper/inventory`, { credentials: 'include' }),
+          fetch(`${API_BASE_URL}/v1/shopkeeper/orders`, { credentials: 'include' })
         ]);
 
         if (invRes.ok && ordRes.ok) {
@@ -47,8 +47,8 @@ export default function ShopkeeperDashboard() {
 
   const updateOrderStatus = async (id, newStatus) => {
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api';
-      const res = await fetch(`${API_BASE_URL}/v1/commerce/shopkeeper/orders/${id}/status`, {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const res = await fetch(`${API_BASE_URL}/v1/shopkeeper/orders/${id}/status`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json'
@@ -102,8 +102,8 @@ export default function ShopkeeperDashboard() {
       setShowProductModal(false);
     } else {
       try {
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api';
-        const res = await fetch(`${API_BASE_URL}/v1/commerce/shopkeeper/inventory`, {
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const res = await fetch(`${API_BASE_URL}/v1/shopkeeper/inventory`, {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json'
