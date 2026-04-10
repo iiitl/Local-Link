@@ -60,40 +60,48 @@ export default async function LandingPage({ searchParams }) {
       <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-400/20 dark:bg-primary/20 blur-[120px] pointer-events-none -z-10 animate-pulse" />
       <div className="fixed bottom-[-10%] right-[-10%] w-[30%] h-[30%] rounded-full bg-purple-400/20 dark:bg-violet-500/10 blur-[100px] pointer-events-none -z-10 animate-pulse delay-1000" />
 
-      <div className="container mx-auto px-4 py-12 md:py-24 max-w-7xl inset-0 z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center mb-16">
+      <div className="container mx-auto px-4 md:px-8 py-16 md:py-32 max-w-7xl inset-0 z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 md:gap-16 items-center mb-16 md:mb-24">
           <div className="lg:col-span-3 space-y-2">
             <div className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs tracking-widest uppercase mb-4 shadow-sm border border-primary/20">
               The Next-Generation Neighborhood
             </div>
             <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.1] text-gray-900 dark:text-white">
-              Elevate Your <br className="hidden md:block"/>
-              <span className="bg-gradient-to-r from-primary via-violet-500 to-fuchsia-500 bg-clip-text text-transparent drop-shadow-sm">Local Living</span>
+              Connect, Share, and <br className="hidden md:block"/>
+              <span className="bg-gradient-to-r from-primary via-violet-500 to-fuchsia-500 bg-clip-text text-transparent drop-shadow-sm">Thrive Locally</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mt-6 mb-8">
               Welcome to a unified, hyper-local ecosystem. Discover seamless apartment commerce, peer-to-peer resource sharing, skill exchange, and vital emergency networks—all in one secure platform.
             </p>
-            <div className="pt-4">
+            <div className="pt-8">
               <Link
                 href={signupLink}
-                className="inline-flex items-center px-8 py-4 rounded-2xl font-bold text-lg text-primary-foreground bg-primary hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-2xl font-bold text-lg text-black dark:text-gray-900 bg-amber-500 hover:bg-amber-600 transition-all shadow-xl shadow-amber-500/20 hover:shadow-amber-500/50 hover:-translate-y-0.5 min-h-[44px]"
               >
-                Join Your Community
+                Get Started
               </Link>
             </div>
           </div>
 
-          {/* Hero Image */}
-          <div className="lg:col-span-2 hidden lg:flex justify-end relative">
-             <div className="relative w-full max-w-md aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/40 dark:border-white/10 ring-8 ring-primary/5 transition-transform hover:scale-[1.02] duration-500">
-               <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent z-10 mix-blend-overlay" />
-               <Image 
-                  src="/hero.png" 
-                  alt="Modern Neighborhood Community" 
-                  fill 
-                  className="object-cover" 
-                  priority 
-               />
+          {/* Hero Visual Area */}
+          <div className="lg:col-span-2 hidden lg:flex justify-center md:justify-end relative items-center">
+             <div className="relative w-full max-w-md aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/40 dark:border-white/10 ring-8 ring-primary/5 transition-transform hover:scale-[1.02] duration-500 flex items-center justify-center bg-gradient-to-tr from-primary/20 to-primary/5 group">
+               <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+               <div className="absolute bg-white/20 dark:bg-black/20 w-32 h-32 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+               <div className="relative z-10 grid grid-cols-2 gap-8 p-8 w-full max-w-sm">
+                 <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-xl flex items-center justify-center animate-bounce shadow-primary/20" style={{ animationDelay: '-0.3s' }}>
+                   <ShoppingBag className="w-12 h-12 text-primary" strokeWidth={1.5} />
+                 </div>
+                 <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-xl flex items-center justify-center translate-y-6 animate-bounce shadow-violet-500/20" style={{ animationDelay: '-0.15s' }}>
+                   <Briefcase className="w-12 h-12 text-violet-500" strokeWidth={1.5} />
+                 </div>
+                 <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-xl flex items-center justify-center -translate-y-6 animate-bounce shadow-amber-500/20" style={{ animationDelay: '-0.45s' }}>
+                   <Wrench className="w-12 h-12 text-amber-500" strokeWidth={1.5} />
+                 </div>
+                 <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-xl flex items-center justify-center animate-bounce shadow-rose-500/20">
+                   <HeartPulse className="w-12 h-12 text-rose-500" strokeWidth={1.5} />
+                 </div>
+               </div>
              </div>
           </div>
         </div>
