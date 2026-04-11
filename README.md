@@ -1,10 +1,12 @@
 # 📍 Local Link
 
 <div align="center">
-  <img src="https://img.shields.io/github/license/M-ayank2005/Local-Link?style=for-the-badge&color=blue" alt="License">
-  <img src="https://img.shields.io/github/issues/M-ayank2005/Local-Link?style=for-the-badge&color=green" alt="Issues">
-  <img src="https://img.shields.io/github/stars/M-ayank2005/Local-Link?style=for-the-badge&color=gold" alt="Stars">
-  <img src="https://img.shields.io/github/forks/M-ayank2005/Local-Link?style=for-the-badge&color=white" alt="Forks">
+
+<img src="https://img.shields.io/github/license/iiitl/Local-Link?style=for-the-badge&color=blue" />
+<img src="https://img.shields.io/github/issues/iiitl/Local-Link?style=for-the-badge&color=green" />
+<img src="https://img.shields.io/github/stars/iiitl/Local-Link?style=for-the-badge&color=gold" />
+<img src="https://img.shields.io/github/forks/iiitl/Local-Link?style=for-the-badge&color=orange" />
+
 </div>
 
 ---
@@ -49,10 +51,11 @@
 ---
 
 ## 📸 Visuals
-> [!IMPORTANT]
-> **Task from Issue #3:** Add a screenshot, diagram, or GIF of the project in action here!
-> 
-> `![Project Demo](./Documentation/placeholder-ui.png)`
+![alt text](<Screenshot 2026-04-11 183705.png>)
+![alt text](image.png)
+
+
+
 
 ---
 
@@ -92,9 +95,13 @@ Local-Link/
 |       `-- config.yml
 `-- contribution.md
 
-## Quick start (local development)
+## 🚀 Quick Start (Local Development)
 
-### 1) Backend
+Follow these steps to run the full project locally.
+
+---
+
+### 🖥️ 1) Backend
 
 ```bash
 cd backend
@@ -103,9 +110,12 @@ cp .env.example .env
 pnpm dev
 ```
 
-By default, backend runs at `http://localhost:5000` unless you override `PORT`.
+* Runs on: http://localhost:5000
+* You can override the port using the `PORT` environment variable.
 
-### 2) Frontend
+---
+
+### 🌐 2) Frontend
 
 ```bash
 cd frontend
@@ -113,56 +123,103 @@ pnpm install
 pnpm dev
 ```
 
-Frontend runs at `http://localhost:3000`.
+* Runs on: http://localhost:3000
 
-Recommended frontend env values in `frontend/.env.local`:
+Create a `.env.local` file in `frontend/` with:
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
 ```
 
-### 3) ML service
+---
+
+### 🤖 3) ML Service
 
 ```bash
 cd ml-service
 python -m venv .venv
-. .venv/Scripts/activate  # Windows PowerShell: .\.venv\Scripts\Activate.ps1
+```
+
+**Activate virtual environment:**
+
+* Windows (PowerShell):
+
+```bash
+.\.venv\Scripts\Activate.ps1
+```
+
+* macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+```bash
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-ML service runs at `http://localhost:8000`.
+* Runs on: http://localhost:8000
 
-## Core API groups
+---
 
-- Auth: `/api/auth/*`
-- Commerce: `/api/v1/commerce/*`
-- Food: `/api/food/*`
-- Resources: `/api/v1/resources/*`
-- Emergency: `/api/v1/emergency/*`
-- ML service health: `GET /health`
+## 🔌 Core API Groups
 
-## Documentation
+| Service   | Endpoints             |
+| --------- | --------------------- |
+| Auth      | `/api/auth/*`         |
+| Commerce  | `/api/v1/commerce/*`  |
+| Food      | `/api/food/*`         |
+| Resources | `/api/v1/resources/*` |
+| Emergency | `/api/v1/emergency/*` |
+| ML Health | `GET /health`         |
 
-Detailed project docs are in `Documentation/`:
+---
 
-- `Documentation/SRS.md`
-- `Documentation/architecture.md`
-- `Documentation/use_cases.md`
-- `Documentation/security.md`
-- `Documentation/contribute.md`
-- `contribution.md`
+## 📚 Documentation
 
-## Contributing
+All detailed documentation is available inside the `Documentation/` folder:
 
-Use feature branches and clear commit messages:
+* `SRS.md` — Software Requirements Specification
+* `architecture.md` — System design & architecture
+* `use_cases.md` — Functional scenarios
+* `security.md` — Security considerations
+* `contribute.md` — Contribution guide
 
-- `feat(<module>): short description`
-- `fix(<module>): short description`
-- `docs: update <topic>`
+Additional:
 
-See `contribution.md` for the full setup, branch, commit, PR, and issue workflow.
+* `contribution.md` — Setup, workflow, PR guidelines
 
-## License
+---
 
-Add your preferred license (for example MIT) in a `LICENSE` file.
+## 🤝 Contributing
+
+We follow a structured Git workflow:
+
+### 📌 Branch Naming
+
+* `feat/<feature-name>`
+* `fix/<bug-name>`
+* `docs/<topic>`
+
+### 📝 Commit Convention
+
+* `feat(module): short description`
+* `fix(module): short description`
+* `docs: update <topic>`
+
+Make sure to:
+
+* Keep PRs focused and small
+* Write clear descriptions
+* Link related issues
+
+👉 See `contribution.md` for complete guidelines.
+
+---
+
+## 📄 License
+
+This project currently does not include a license.
+
+You can add one by creating a `LICENSE` file (e.g., MIT License).
